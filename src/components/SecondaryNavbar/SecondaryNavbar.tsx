@@ -654,7 +654,7 @@ const CustomerSupport = () => {
   const [hovered, setHovered] = useState(false);
 
   const fillColor =
-    pathname.includes("/contact-us") || hovered ? "#E70F0F" : "#77777E";
+    pathname?.includes("/contact-us") || hovered ? "#E70F0F" : "#77777E";
 
   return (
     <Link
@@ -678,7 +678,7 @@ const CustomerSupport = () => {
         />
       </svg>{" "}
       <p
-        className={`text-gray-600 text-[14px] not-italic hover:text-[#E70F0F] font-medium ${pathname.includes("/contact-us") ? "!text-[#E70F0F]" : ""
+        className={`text-gray-600 text-[14px] not-italic hover:text-[#E70F0F] font-medium ${pathname?.includes("/contact-us") ? "!text-[#E70F0F]" : ""
           }`}
       >
         Customer Support
@@ -691,7 +691,7 @@ const Blogs = () => {
   const [hovered, setHovered] = useState(false);
 
   const fillColor =
-    pathname.includes("/blogs") || hovered ? "#E70F0F" : "#77777E";
+    pathname?.includes("/blogs") || hovered ? "#E70F0F" : "#77777E";
 
   return (
     <Link
@@ -713,7 +713,7 @@ const Blogs = () => {
         />
       </svg>
       <p
-        className={`text-gray-600 text-[14px] not-italic hover:text-[#E70F0F] font-medium ${pathname.includes("/blogs") ? "!text-[#E70F0F]" : ""
+        className={`text-gray-600 text-[14px] not-italic hover:text-[#E70F0F] font-medium ${pathname?.includes("/blogs") ? "!text-[#E70F0F]" : ""
           }`}
       >
         Blogs
@@ -726,7 +726,7 @@ const OfferZone = () => {
   const [hovered, setHovered] = useState(false);
 
   const fillColor =
-    pathname.includes("/offers") || hovered ? "#E70F0F" : "#77777E";
+    pathname?.includes("/offers") || hovered ? "#E70F0F" : "#77777E";
 
   return (
     <div
@@ -749,7 +749,7 @@ const OfferZone = () => {
         />
       </svg>
       <p
-        className={`text-gray-600 text-[14px] not-italic  font-medium ${pathname.includes("/offers")
+        className={`text-gray-600 text-[14px] not-italic  font-medium ${pathname?.includes("/offers")
           ? "!text-[#E70F0F]"
           : "hover:text-[#E70F0F]"
           }`}

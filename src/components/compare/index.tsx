@@ -10,45 +10,44 @@ import { ProductDetailType } from "@/utils/productType";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
+// Define type for filterData for better type safety
+type FilterDataType = {
+  price: string;
+  weight: string;
+  brand: string;
+  rating: number;
+  [key: string]: string | number; // Add dynamic keys with string or number values
+};
+
 export default function ComparePage() {
   const params = useSearchParams();
   const productId = params?.get("productId");
   const { data, isLoading, error } = useGetAllProducts({});
-  const [productA, setProductA] = useState<any>(null);
-  const [productB, setProductB] = useState<any>(null);
+  const [productA, setProductA] = useState<FilterDataType | null>(null); // Default to null
+  const [productB, setProductB] = useState<FilterDataType | null>(null); // Default to null
 
   useEffect(() => {
-    console.log("productId:", productId);
-    console.log("data:", data);
-    console.log("isLoading:", isLoading);
-    console.log("error:", error);
-
     if (productId && data?.products) {
       const products = data.products as ProductDataType[];
-      console.log("products array:", products);
-
-      // Set productA
       const defaultProduct = products?.find(
         (product) => product.id === Number(productId)
       );
-      console.log("defaultProduct (productA):", defaultProduct);
+
       if (defaultProduct) {
-        const filterData = {
-          price: defaultProduct?.varients?.[0]?.sellingPrice,
-          weight: defaultProduct?.varients?.[0]?.units,
-          brand: defaultProduct?.brand?.heading,
-          rating: defaultProduct?.averageRating,
+        const filterData: FilterDataType = {
+          price: defaultProduct?.varients?.[0]?.sellingPrice || "",
+          weight: defaultProduct?.varients?.[0]?.units || "",
+          brand: defaultProduct?.brand?.heading || "",
+          rating: defaultProduct?.averageRating || 0,
         };
+
         defaultProduct?.overView?.forEach((item: any) => {
           filterData[item?.nutrients] = item.value;
         });
-        console.log("filterData for productA:", filterData);
         setProductA(filterData);
-      } else {
-        console.log("Product with ID", productId, "not found in products");
       }
     }
-  }, [productId, data, isLoading, error]); // Removed productB from dependencies
+  }, [productId, data]);
 
   if (isLoading) {
     return <div>Loading products...</div>;
@@ -74,7 +73,7 @@ export default function ComparePage() {
             setProductData={setProductB}
           />
         </div>
-        {productA ? (
+        {productA && productB ? (
           <ComparisonTable productA={productA} productB={productB} />
         ) : (
           <p>No products selected for comparison.</p>
@@ -109,7 +108,7 @@ export const ProductsCompareInfo = ({
   defaultProductId = null,
 }: {
   products: ProductDataType[];
-  setProductData: any;
+  setProductData: React.Dispatch<React.SetStateAction<FilterDataType | null>>;
   defaultProductId: any;
 }) => {
   const [showList, setShowList] = useState(false);
@@ -121,9 +120,9 @@ export const ProductsCompareInfo = ({
     userData?.id as number
   );
 
-  const allFilterData: any[] = useMemo(
+  const allFilterData: ProductDataType[] = useMemo(
     () =>
-      products?.filter((product: any) =>
+      products?.filter((product: ProductDataType) =>
         product.name.toLowerCase().includes(searchValue.toLowerCase())
       ) ?? [],
     [products, searchValue]
@@ -132,16 +131,17 @@ export const ProductsCompareInfo = ({
   useEffect(() => {
     if (data) {
       const product: ProductDetailType = data?.data?.result;
-      const filterData = {
-        price: product?.varients?.[0]?.sellingPrice,
-        weight: product?.varients?.[0]?.units,
-        brand: product?.brand?.heading,
-        rating: product?.averageRating,
+      const filterData: FilterDataType = {
+        price: product?.varients?.[0]?.sellingPrice || "",
+        weight: product?.varients?.[0]?.units || "",
+        brand: product?.brand?.heading || "",
+        rating: product?.averageRating || 0,
       };
+
       product?.overView?.forEach((item: any) => {
         filterData[item?.nutrients] = item.value;
       });
-      console.log("Selected product data:", filterData);
+
       setProductData(filterData);
     }
   }, [dataUpdatedAt, setProductData]);
@@ -203,8 +203,8 @@ export const ProductCard = ({
   setProductData,
   productsDetails,
 }: {
-  setProduct: any;
-  setProductData: any;
+  setProduct: React.Dispatch<React.SetStateAction<number | null>>;
+  setProductData: React.Dispatch<React.SetStateAction<FilterDataType | null>>;
   productsDetails: any;
 }) => {
   return (
@@ -237,30 +237,22 @@ export const ProductCard = ({
 };
 
 export const ComparisonTable = ({
-  productA = {},
-  productB = {},
+  productA = null,
+  productB = null,
 }: {
-  productA: any;
-  productB: any;
+  productA: FilterDataType | null;
+  productB: FilterDataType | null;
 }) => {
   const allKeys = Array.from(
-    new Set([
-      ...(productA ? Object.keys(productA) : []),
-      ...(productB ? Object.keys(productB) : []),
-    ])
+    new Set([...(productA ? Object.keys(productA) : []), ...(productB ? Object.keys(productB) : [])])
   ).sort();
-  console.log("productA in table:", productA);
-  console.log("productB in table:", productB);
-  console.log("allKeys:", allKeys);
 
   return (
     <div className="w-full">
       {allKeys.length > 0 ? (
         allKeys.map((key) => (
           <div key={key} className="w-full grid grid-cols-3 items-center">
-            <div
-              className={`p-3 font-medium text-2xl max-sm:text-sm capitalize border-b border-r`}
-            >
+            <div className="p-3 font-medium text-2xl max-sm:text-sm capitalize border-b border-r">
               {key}
             </div>
             <div

@@ -12,7 +12,7 @@ import { useSearchParams } from "next/navigation";
 export default function Page() {
   const searchParams = useSearchParams();
   const { userData } = useAppContext();
-  const productId = searchParams.get("productId") as string;
+  const productId = searchParams?.get("productId") as string;
   const { data } = useGetProductDetail(Number(productId), userData?.id ?? 1);
   if (!data) return <></>;
   const productData = data?.data?.result as ProductDetailType;

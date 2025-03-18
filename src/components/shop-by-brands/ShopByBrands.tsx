@@ -14,7 +14,7 @@ import { ChangeEvent, useState } from "react";
 
 export default function ShopByBrandPage() {
   const parmas = useSearchParams();
-  const category = parmas.get("category");
+  const category = parmas?.get("category");  
   const { filterProductsParams, selectedBrands } = useAppContext();
   const [sorting, setSorting] = useState<string | null>(null);
   const { data: bannersData } = useGetAllBanners();
