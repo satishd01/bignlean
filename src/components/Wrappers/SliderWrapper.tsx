@@ -1,11 +1,10 @@
 "use client";
 import { ReactNode } from "react";
 // Import Swiper React components
-import { Swiper } from "swiper/react";
+import { Swiper, SwiperProps } from "swiper/react";
 
 // Import Swiper styles
 import "swiper/css";
-
 import "swiper/css/free-mode";
 
 import { FreeMode } from "swiper/modules";
@@ -15,11 +14,14 @@ type Props = {
   children: ReactNode;
   slidePerView?: number;
   showBtns?: boolean;
+  breakpoints?: SwiperProps["breakpoints"]; // Add breakpoints to the Props type
 };
+
 export default function SliderWrapper({
   children,
   slidePerView,
   showBtns = false,
+  breakpoints, // Destructure breakpoints from props
 }: Props) {
   return (
     <Swiper
@@ -29,6 +31,7 @@ export default function SliderWrapper({
       modules={[FreeMode]}
       className="mySwiper mx-auto w-full relative"
       wrapperClass="flex gap-5"
+      breakpoints={breakpoints} // Pass breakpoints to Swiper
     >
       {showBtns && (
         <>
