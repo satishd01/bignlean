@@ -25,36 +25,42 @@ export default function Home() {
   const { data: homeProducts } = useGetAllHomeProducts();
   const { userData } = useAppContext();
   useGEtWishList(userData?.id as number);
+
+  // Updated toggleAccordion function with null checks
   function toggleAccordion(index: number) {
     const content = document.getElementById(`content-${index}`);
     const icon = document.getElementById(`icon-${index}`);
 
-    // SVG for Down icon
-    const downSVG = `
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4">
-        <path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
-      </svg>
-    `;
+    // Safely check if content and icon exist before accessing their properties
+    if (content && icon) {
+      // SVG for Down icon
+      const downSVG = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4">
+          <path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+        </svg>
+      `;
 
-    // SVG for Up icon
-    const upSVG = `
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4">
-        <path fill-rule="evenodd" d="M11.78 9.78a.75.75 0 0 1-1.06 0L8 7.06 5.28 9.78a.75.75 0 0 1-1.06-1.06l3.25-3.25a.75.75 0 0 1 1.06 0l3.25 3.25a.75.75 0 0 1 0 1.06Z" clip-rule="evenodd" />
-      </svg>
-    `;
+      // SVG for Up icon
+      const upSVG = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4">
+          <path fill-rule="evenodd" d="M11.78 9.78a.75.75 0 0 1-1.06 0L8 7.06 5.28 9.78a.75.75 0 0 1-1.06-1.06l3.25-3.25a.75.75 0 0 1 1.06 0l3.25 3.25a.75.75 0 0 1 0 1.06Z" clip-rule="evenodd" />
+        </svg>
+      `;
 
-    // Toggle the content's max-height for smooth opening and closing
-    if (content.style.maxHeight && content.style.maxHeight !== '0px') {
-      content.style.maxHeight = '0';
-      icon.innerHTML = upSVG;
-    } else {
-      content.style.maxHeight = content.scrollHeight + 'px';
-      icon.innerHTML = downSVG;
+      // Toggle the content's max-height for smooth opening and closing
+      if (content.style.maxHeight && content.style.maxHeight !== '0px') {
+        content.style.maxHeight = '0';
+        icon.innerHTML = upSVG;
+      } else {
+        content.style.maxHeight = content.scrollHeight + 'px';
+        icon.innerHTML = downSVG;
+      }
     }
   }
+
   return (
     <div className="max-sm:pb-10">
-      <div className="hidden  justify-center max-[750px]:flex mb-4 max-[500px]:px-5">
+      <div className="hidden justify-center max-[750px]:flex mb-4 max-[500px]:px-5">
         <SearchForProducts />
       </div>
       <HomeCarosoul bannersData={bannersData?.banner} />
@@ -67,28 +73,66 @@ export default function Home() {
         </div>
         <div className="block sm:hidden">
           <div className="border-b border-slate-200">
-            <button onClick={() => toggleAccordion(1)} className="w-full flex justify-between items-center py-1 text-slate-800">
+            <button
+              onClick={() => toggleAccordion(1)}
+              className="w-full flex justify-between items-center py-1 text-slate-800"
+            >
               <span>What is Material Tailwind?</span>
-              <span id="icon-1" className="text-slate-800 transition-transform duration-300">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+              <span
+                id="icon-1"
+                className="text-slate-800 transition-transform duration-300"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  className="size-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                  />
                 </svg>
-
               </span>
             </button>
-            <div id="content-1" className="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+            <div
+              id="content-1"
+              className="max-h-0 overflow-hidden transition-all duration-300 ease-in-out"
+            >
               <div className="pb-5 text-sm text-slate-500">
                 <div className="border-b border-slate-200">
-                  <button onClick={() => toggleAccordion(2)} className="w-full flex justify-between items-center py-1 text-slate-800">
+                  <button
+                    onClick={() => toggleAccordion(2)}
+                    className="w-full flex justify-between items-center py-1 text-slate-800"
+                  >
                     <span>How to use Material Tailwind?</span>
-                    <span id="icon-2" className="text-slate-800 transition-transform duration-300">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                    <span
+                      id="icon-2"
+                      className="text-slate-800 transition-transform duration-300"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        className="size-6"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                        />
                       </svg>
-
                     </span>
                   </button>
-                  <div id="content-2" className="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                  <div
+                    id="content-2"
+                    className="max-h-0 overflow-hidden transition-all duration-300 ease-in-out"
+                  >
                     <div className="pb-5 text-sm text-slate-500">
                       You can use Material Tailwind by importing its components into your Tailwind CSS project.
                     </div>
@@ -99,26 +143,47 @@ export default function Home() {
           </div>
 
           <div className="border-b border-slate-200">
-            <button onClick={() => toggleAccordion(3)} className="w-full flex justify-between items-center py-1 text-slate-800">
+            <button
+              onClick={() => toggleAccordion(3)}
+              className="w-full flex justify-between items-center py-1 text-slate-800"
+            >
               <span>How to use Material Tailwind?</span>
-              <span id="icon-3" className="text-slate-800 transition-transform duration-300">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+              <span
+                id="icon-3"
+                className="text-slate-800 transition-transform duration-300"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  className="size-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                  />
                 </svg>
-
               </span>
             </button>
-            <div id="content-3" className="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+            <div
+              id="content-3"
+              className="max-h-0 overflow-hidden transition-all duration-300 ease-in-out"
+            >
               <div className="pb-5 text-sm text-slate-500">
                 You can use Material Tailwind by importing its components into your Tailwind CSS project.
               </div>
             </div>
           </div>
         </div>
+
         <Quotes
           authorName="Michael John Bobak"
           quote="“All progress takes place outside the comfort zone.”"
         />
+
         {homeProducts?.data
           ?.filter((item: any) => item.type === "Single")
           .map((item: any, index: number) => (
@@ -146,7 +211,7 @@ export default function Home() {
                       <img
                         src={combo.image}
                         alt="offer"
-                        className=" object-cover rounded w-full h-full"
+                        className="object-cover rounded w-full h-full"
                       />
                     </div>
                   </Link>
@@ -159,6 +224,7 @@ export default function Home() {
           authorName="Arnold Schwarzenegger"
           quote="“There are no shortcuts. Everything is reps, reps, reps.”"
         />
+
         <div className="max-[1100px]:hidden">
           <DownloadBanner />
         </div>
